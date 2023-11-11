@@ -4,30 +4,38 @@ from extractions import docked_ships_extract, operations_extract
 from transformations import docked_ships_transform, operations_transform
 from views import dock_view, operations_view
 
-def dockedShipsPipeline(rawPath,trustedPath):
+DATALAKE_PATH = 'gcs://harbor-datalake'
+
+def dockedShipsPipeline():
+    rawPath = DATALAKE_PATH + '/raw/docked_ships'
+    trustedPath = DATALAKE_PATH + '/trusted/docked_ships'
+
     savedRawFile = docked_ships_extract.run(rawPath)
     savedTrustedFile = docked_ships_transform.run(savedRawFile,trustedPath)
     return savedTrustedFile
 
-def operationsPipeline(rawPath,trustedPath):
+def operationsPipeline():
+    rawPath = DATALAKE_PATH + '/raw/operations'
+    trustedPath = DATALAKE_PATH + '/trusted/operations'
+
     savedRawFile = operations_extract.run(rawPath)
     savedTrustedFile = operations_transform.run(savedRawFile,trustedPath)
     return savedTrustedFile
 
+def viewsPipeline(dockedShipsTrustedFile, operationsTrustedFile):
+
+    dockViewPath = DATALAKE_PATH + '/views/dock'
+    operationsViewPath = DATALAKE_PATH + '/views/operations'
+
+    dock_view.generateView(dockedShipsTrustedFile,operationsTrustedFile,dockViewPath)
+    operations_view.generateView(dockedShipsTrustedFile,operationsTrustedFile,operationsViewPath)
+
 def runPipeline():
     settings.init()
 
-    dockedShipsRawPath = 'gcs://cloud-7-test/harbor/data/raw/docked_ships'
-    dockedShipsTrustedPath = 'gcs://cloud-7-test/harbor/data/trusted/docked_ships'
-    operationsRawPath = 'gcs://cloud-7-test/harbor/data/raw/operations'
-    operationsTrustedPath = 'gcs://cloud-7-test/harbor/data/trusted/operations'
-    dockViewPath = 'gcs://cloud-7-test/harbor/data/views/dock'
-    operationsViewPath = 'gcs://cloud-7-test/harbor/data/views/operations'
-
-    dockedShipsTrustedFile = dockedShipsPipeline(dockedShipsRawPath,dockedShipsTrustedPath)
-    operationsTrustedFile = operationsPipeline(operationsRawPath,operationsTrustedPath)
-    dock_view.generateView(dockedShipsTrustedFile,operationsTrustedFile,dockViewPath)
-    operations_view.generateView(dockedShipsTrustedFile,operationsTrustedFile,operationsViewPath)
+    dockedShipsTrustedFile = dockedShipsPipeline()
+    operationsTrustedFile = operationsPipeline()
+    viewsPipeline(dockedShipsTrustedFile,operationsTrustedFile)
 
 @functions_framework.http
 def cloudEntrypoint(request):
