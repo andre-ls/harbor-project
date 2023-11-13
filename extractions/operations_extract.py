@@ -13,7 +13,7 @@ def extractTable(page):
     rowValues = extractRows(table)
 
     df = pd.DataFrame(data=rowValues,columns=columnNames)
-    df['extract_date'] = settings.EXTRACT_TIME
+    df['extract_date'] = settings.EXTRACT_TIME_FORMATTED
     return df
 
 def extractColumnNames(table):
