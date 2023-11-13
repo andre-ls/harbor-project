@@ -7,6 +7,7 @@ def processData(df):
     df['Atracamento'] = pd.to_datetime(df['Atracamento'],format='%d/%m/%y %H:%M:%S')
     df['Inicio_Operacao'] = pd.to_datetime(df['Inicio_Operacao'],format='%d/%m/%y %H:%M:%S')
     df['Estimativa_Fim_Operacao'] = pd.to_datetime(df['Estimativa_Fim_Operacao'],format='%Y-%m-%d %H:%M:%S')
+    df['Data_Extracao'] = pd.to_datetime(df['Data_Extracao'])
     df['Movimentacao_%'] = df['Movimentacao_%'].apply(lambda x:cleanMovementRows(x))
     df['Movimentacao_%'] = pd.to_numeric(df['Movimentacao_%'])
 
