@@ -3,8 +3,7 @@ import settings
 from extractions import docked_ships_extract, operations_extract
 from transformations import docked_ships_transform, operations_transform
 
-#DATALAKE_PATH = 'gcs://harbor-datalake'
-DATALAKE_PATH = '/harbor-datalake'
+DATALAKE_PATH = 'gcs://harbor-datalake'
 
 def dockedShipsPipeline():
     rawPath = DATALAKE_PATH + '/raw/docked_ships'
