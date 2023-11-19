@@ -51,7 +51,7 @@ So, as said, to get the benefits of both tables, a view is created on Big Query 
 > 2. Since a docked ship can have more than one operation associated with, the data is grouped by ship and extract time, so the resulting dataset has only one row per ship per extract time;
 > 3. Filter data to only the most recent extract time, as a way to show only the most recent snapshot of the docked ships.
 
-The results of these steps are then forwarded to Looker Studio for visualizations.
+The results of these steps are then forwarded to Looker Studio for visualizations, which can be found [here](https://lookerstudio.google.com/reporting/965d7008-9553-4228-b5b3-9392384a8562).
 
 ## Some Decisions
 
