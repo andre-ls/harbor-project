@@ -16,17 +16,17 @@ Along with that, this project also has the technical and personal goal of traini
 
 ![Pipeline](harbor-project-diagram.drawio.png)
 
-The Data Pipeline of this project was intetionally created in a very simple way, both because the size of batches of data ingested are quite small, and also for a personal selection of tools I wanted to practice on this project.
+The Data Pipeline of this project was intetionally created in a very simple way, both because the size of data batches ingested are quite small, and also for a personal selection of tools I wanted to practice on this project.
 
 It's main structure is based on the following elements:
 - A simple Datalake, implemented using the Google Cloud Storage;
-- A Data Pipeline, built with Python code using the Pandas Framework as the main processing engine, and implemented on Cloud using the Google Cloud Fuction for it's execution and the Google Cloud Scheduler for triggering it's execution on scheduled intervals;
+- A Data Pipeline, built with Python code using the Pandas Framework as the main processing engine, and implemented on Cloud using the Google Cloud Fuctions for it's execution and the Google Cloud Scheduler for triggering it's execution on scheduled intervals;
 - A Data Warehouse, implemented on Google Big Query;
 - Dashboard for visualizing the processed data, implemented on Looker Studio.
 
 Let's understand the whole process in more details.
 
-> 1. The pipeline follows a ELT principle of design. So the first step of the process is extract the data. The specific data used on this project was available in two of the websites pages as HTML tables. So, a scraping process was implemented using Beautiful Soup, and the resulting data, without any processing was saved in the raw layer of the Datalake implemented on Google Cloud Storage.
+> 1. The pipeline follows a ELT principle of design. So the first step of the process is extract the data. The specific data used on this project was available in two of the websites pages as HTML tables. So, a scraping process was implemented using Beautiful Soup, and the resulting data, without any processing was saved in the raw layer of the Datalake.
 > 2. After the extraction, the next step involves the processing of the data. As said before Pandas was used as the main processing engine, and the generated data was saved on the Datalake's trusted layer. The operations involved on this step were basically cleaning operations, with practically no big alterations on the data schema.
 > 3. With the trusted data generated, the results are then transfered to the Data Warehouse using the scheduled Data Transfer service offered by Big Query itself. 
 > 4. On Big Query, some specific analytical views are created using SQL code, which involved some joins operations and filtering, and then are used by Looker Studio for the visualizations.
@@ -40,7 +40,7 @@ In terms of scheduling, this whole process only involve three schedulable steps:
 
 ![Dashboard Print](dashboard.png)
 
-For the visualizations, at the first moment, I decided to focus only on showing the most recent data about the Docked Ships, as a way to present kind of a snapshot of the actual status of the Port, which is basically what is presented on the website, but just in a tabular format. I wanted to enhance that with more interesting visualizations.
+For the visualizations, at the first moment, I decided to focus only on showing the most recent data about the Docked Ships, as a way to present a snapshot of the actual status of the Port. This information is presented on the website, but just in a tabular format, and I wanted to enhance that with more interesting visualizations.
 
 The visualizations made on the dashboard are made based on a view created on Big Query. This view, in turn, is generated from two processed tables originated directly from the source:
 - The First One, that I called 'docked-ships' is a table listing the actual docked ships on the Port, the kind of load they are carring and the amount to load and unload.
@@ -57,9 +57,9 @@ The results of these steps are then forwarded to Looker Studio for visualization
 
 I created this section just to address some decisions I made on this project, being questionable on not (and also to remember myself in the future why I did some stuff).
 
-First one, is that, as show in the GCP Architecture Diagram, there's only one Cloud Function implemented to handle all the data pipeline. Another possibility would be to have two functions: One to extract the data and load the Raw Layer, and another one ingesting the raw data, processing it and then loading the Trusted Layer. I prefered the Single Function model basically for two reasons: It's more easy to manage, and by concentrating all the code on one fuction, I could train my data organization when building a pipeline using the best practices, which was a downside of my previous projects.
+First one is that, as show in the GCP Architecture Diagram, there's only one Cloud Function implemented to handle all the data pipeline. Another possibility would be to have two functions: One to extract the data and load the raw layer, and another one ingesting the raw data, processing it and then loading the trusted layer. I prefered the Single Function model basically for two reasons: It's more easy to manage, and by concentrating all the code on one fuction, I could train my data organization when building a pipeline using the best practices, which was a downside of my previous projects.
 
-Second decision, is that despite keeping all my code and repository written in English, i decided to keep the Dashboard presented with Brazilian Portuguese. That basically happened because the data have some categorical fields with a lot of different values all written on Portuguese, and not only it would be dauting to translate everything, but also I wouldn't be able to handle future cases of new categories if they happen. So, I decided to keep everything on the dashboard in the same language, but keep all on the repository as English, since it's almost a pattern for my other projects.
+Second decision, is that despite keeping all my code and repository written in English, I decided to keep the Dashboard presented with Brazilian Portuguese. That basically happened because the data have some categorical fields with a lot of different values all written on Portuguese, and not only it would be dauting to translate everything, but also I wouldn't be able to handle future cases of new categories if they happen. So, I decided to keep everything on the dashboard in the same language, but keep all on the repository as English, since it's almost a pattern for my other projects.
 
 Third, is about the hourly updates. Could it be reasonable to do updates on higher frequencies? Yes, the data on the website appears to be updated in a interval of some minutes. But despite that I decided to keep things on the basis of hours, again for two reasons. First, and most important, I would not like to cause any load excess on the source website doing scraping, so I decided to keep a balance between low access and reasonable update frequency for the project. And second, keeping a lower number of calls to Cloud Functions avoid me to burst the bank on GCP.
 
