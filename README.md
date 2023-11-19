@@ -19,10 +19,10 @@ Along with that, this project also has the technical and personal goal of traini
 The Data Pipeline of this project was intetionally created in a very simple way, both because the size of batches of data ingested are quite small, and also for a personal selection of tools I wanted to practice on this project.
 
 It's main structure is based on the following elements:
-    - A simple Datalake, implemented using the Google Cloud Storage;
-    - A Data Pipeline, built with Python code using the Pandas Framework as the main processing engine, and implemented on Cloud using the Google Cloud Fuction for it's execution and the Google Cloud Scheduler for triggering it's execution on scheduled intervals;
-    - A Data Warehouse, implemented on Google Big Query;
-    - Dashboard for visualizing the processed data, implemented on Looker Studio.
+- A simple Datalake, implemented using the Google Cloud Storage;
+- A Data Pipeline, built with Python code using the Pandas Framework as the main processing engine, and implemented on Cloud using the Google Cloud Fuction for it's execution and the Google Cloud Scheduler for triggering it's execution on scheduled intervals;
+- A Data Warehouse, implemented on Google Big Query;
+- Dashboard for visualizing the processed data, implemented on Looker Studio.
 
 Let's understand the whole process in more details.
 
@@ -32,9 +32,9 @@ Let's understand the whole process in more details.
 > 4. On Big Query, some specific analytical views are created using SQL code, which involved some joins operations and filtering, and then are used by Looker Studio for the visualizations.
 
 In terms of scheduling, this whole process only involve three schedulable steps:
-    - The execution of the pipeline on Cloud Functions, which is triggered by Cloud Scheduler on every hour at minute 00.
-    - The transfer from the Datalake to the Data Warehouse, which was scheduled to run hourly at minute 10, giving enough time to the pipeline be executed and then handling updated data to the Warehouse.
-    - The update of the Data Source on Looker Studio, which was scheduled to run hourly. Specifying the minute to run was unfortunately not supported.
+- The execution of the pipeline on Cloud Functions, which is triggered by Cloud Scheduler on every hour at minute 00.
+- The transfer from the Datalake to the Data Warehouse, which was scheduled to run hourly at minute 10, giving enough time to the pipeline be executed and then handling updated data to the Warehouse.
+- The update of the Data Source on Looker Studio, which was scheduled to run hourly. Specifying the minute to run was unfortunately not supported.
 
 ## Visualizations
 
