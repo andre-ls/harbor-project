@@ -29,10 +29,8 @@ def extractRowValues(row):
     return [value.text for value in rowValues]
 
 def run(outputPath):
-    html = requests.get(URL).content
+    html = requests.get(URL,verify=False).content
     bs = BeautifulSoup(html,'html.parser')
 
     df = extractTable(bs)
     return file_utils.saveData(df,outputPath,'csv')
-
-
