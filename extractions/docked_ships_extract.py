@@ -29,7 +29,7 @@ def extractRowValues(row):
     return [value.text for value in rowValues]
 
 def run(outputPath):
-    html = requests.get(URL,verify=False).content
+    html = requests.get(URL,verify='_.portodesantos.com.br').content
     bs = BeautifulSoup(html,'html.parser')
 
     df = extractTable(bs)
