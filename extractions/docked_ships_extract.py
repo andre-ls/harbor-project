@@ -1,3 +1,4 @@
+import os
 import settings
 import requests
 import pandas as pd
@@ -5,6 +6,8 @@ from bs4 import BeautifulSoup
 from utils import file_utils
 
 URL = 'https://www.portodesantos.com.br/informacoes-operacionais/operacoes-portuarias/navegacao-e-movimento-de-navios/atracados-porto-terminais/'
+root_path = os.path.abspath(os.getcwd())
+ssl_path = os.path.join(root_path,'ssl/ssl_certificate.pem')
 
 def extractTable(page):
     table = page.find('table',id='atracados')
@@ -29,8 +32,7 @@ def extractRowValues(row):
     return [value.text for value in rowValues]
 
 def run(outputPath):
-    html = requests.get(URL,verify='_.portodesantos.com.br').content
+    html = requests.get(URL,verify=ssl_path).content
     bs = BeautifulSoup(html,'html.parser')
-
     df = extractTable(bs)
     return file_utils.saveData(df,outputPath,'csv')
