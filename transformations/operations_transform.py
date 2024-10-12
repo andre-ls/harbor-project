@@ -7,7 +7,7 @@ def processData(df):
     df.columns = ['Local','Viagem','Navio','Agente','Atracamento','Inicio_Operacao','Operador','Movimentacao_%','Status','Estimativa_Fim_Operacao','Data_Extracao']
     df['Atracamento'] = df['Atracamento'].apply(lambda x:formatDate(x))
     df['Inicio_Operacao'] = df['Inicio_Operacao'].apply(lambda x:formatDate(x))
-    df['Movimentacao_%'] = pd.to_numeric(df['Movimentacao_%'].apply(lambda x:cleanMovementRows(x)))
+    df['Movimentacao_%'] = df['Movimentacao_%'].apply(lambda x:cleanMovementRows(x)).astype(float)
 
     return df
 
@@ -16,7 +16,7 @@ def cleanMovementRows(row):
     row = row[:len(row)//2]
 
     if row == '':
-        row = '0'
+        row = '0.0'
 
     return row
 
